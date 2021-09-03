@@ -37,3 +37,4 @@ begin
 rescue StandardError => e
   logger.error e
 end
+logger.info 'finish'
