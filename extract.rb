@@ -9,11 +9,11 @@ USER = 'ASTERISK_MANAGER_USERNAME'
 PASS = 'ASTERISK_MANAGER_PASSWORD'
 DEBUG = true
 logger = Logger.new('extract.log', 'monthly')
-logger.info 'start'
 
-begin
-  res = {}
-  loop do
+logger.info 'start'
+loop do
+  begin
+    res = {}
     @ami = RubyAsterisk::AMI.new(ASTER, PORT)
     @ami.login(USER, PASS)
     peers = @ami.sip_peers.data
@@ -33,8 +33,9 @@ begin
     p res if DEBUG
     File.write('report.json', JSON.pretty_generate(res))
     sleep(60)
+  rescue StandardError => e
+    logger.error e
   end
-rescue StandardError => e
-  logger.error e
 end
+
 logger.info 'finish'
